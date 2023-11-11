@@ -1,0 +1,67 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+#header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.event {
+  width: 800px;
+  height: 200px;
+  margin: 10px;
+  background-color: seashell;
+  border: 1px solid black;
+  display: inline-block;
+  text-align: center;
+  line-height: 150px;
+  font-size: 20px;
+}
+
+#cardContainer {
+  display: flex;
+}
+
+.card {
+  width: 300px;
+  height: 450px;
+  margin: 10px;
+  background-color: lightblue;
+  display: flex;
+  cursor: pointer;
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 150px;
+  font-size: 20px;
+}
+
+.text1,
+.text2 {
+  margin-bottom: 5px;
+}
+
+#chipContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  max-width: 900px;
+  overflow: auto;
+}
+
+.chip {
+  width: 60px;
+  height: 30px;
+  background-color: yellow;
+  border: 1px solid #ccc;
+  margin: 0 5px 5px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
