@@ -24,7 +24,6 @@ function diplayChips() {
 function handleCardClick(cardId) {
     var newCardType = (0, utils_1.getRandomCardType)();
     var cardElement = document.getElementById("card".concat(cardId));
-    console.log('cardElement:', cardElement);
     if (cardElement) {
         var newText1 = (0, utils_1.getRandomText)();
         var newText2 = (0, utils_1.getRandomText)();

@@ -24,7 +24,6 @@ function diplayChips() {
 function handleCardClick(cardId: number) {
   const newCardType = getRandomCardType()
   const cardElement = document.getElementById(`card${cardId}`)
-  console.log('cardElement:', cardElement)
 
   if (cardElement) {
     const newText1 = getRandomText()

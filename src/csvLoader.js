@@ -24,78 +24,78 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readCsvFiles = exports.emotions = exports.options = exports.events2 = exports.events1 = void 0;
-var fs = __importStar(require("fs"));
-var csv_parse_1 = require("csv-parse");
+var csv_1 = require("./static/csv");
+var Papa = __importStar(require("papaparse"));
 exports.events1 = [];
 exports.events2 = [];
 exports.options = [];
 exports.emotions = [];
-var eventParser = (0, csv_parse_1.parse)({ from_line: 2 });
-var optionParser = (0, csv_parse_1.parse)({ from_line: 2 });
-var emotionParser = (0, csv_parse_1.parse)({ from_line: 2 });
 var readCsvFiles = function () {
     // event.csvの読み込み
-    fs.createReadStream('static/event.csv')
-        .pipe(eventParser)
-        .on('data', function (row) {
-        var id = row[0];
-        var type = row[1];
-        var title = row[2];
-        var text = row[3];
-        var options = [row[4], row[6], row[8]];
-        var event = { id: id, title: title, text: text, options: options };
-        if (type === '1') {
-            exports.events1.push(event);
+    Papa.parse(csv_1.eventCsvData, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function (result) {
+            result.data.forEach(function (row) {
+                var id = row[0];
+                var type = row[1];
+                var title = row[2];
+                var text = row[3];
+                var options = [row[4], row[6], row[8]];
+                var event = { id: id, title: title, text: text, options: options };
+                if (type === '1') {
+                    exports.events1.push(event);
+                }
+                if (type === '2') {
+                    exports.events2.push(event);
+                }
+            });
+        },
+        error: function (error) {
+            console.error('event.csvの読み込みでエラーが発生しました:', error.message);
         }
-        if (type === '2') {
-            exports.events2.push(event);
-        }
-    })
-        .on('end', function () {
-        // ファイル読み込みが完了した後に実行される処理
-    })
-        .on('error', function (error) {
-        // エラーハンドリング
-        console.error('event.csvの読み込みでエラーが発生しました:', error.message);
     });
     // option.csvの読み込み
-    fs.createReadStream('static/option.csv')
-        .pipe(optionParser)
-        .on('data', function (row) {
-        var id = row[0];
-        var title = row[1];
-        var text = row[2];
-        var reslutText = row[3];
-        var emotions = {
-            need: row[4],
-            get: row[6],
-            lost: row[8]
-        };
-        var option = { id: id, title: title, text: text, reslutText: reslutText, emotions: emotions };
-        exports.options.push(option);
-    })
-        .on('end', function () {
-        // ファイル読み込みが完了した後に実行される処理
-    })
-        .on('error', function (error) {
-        // エラーハンドリング
-        console.error('option.csvの読み込みでエラーが発生しました:', error.message);
+    Papa.parse(csv_1.optionCsvData, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function (result) {
+            result.data.forEach(function (row) {
+                var id = row.id;
+                var title = row.title;
+                var text = row.text;
+                var reslutText = row.reslutText;
+                var emotions = {
+                    need: row.need,
+                    get: row.get,
+                    lost: row.lost
+                };
+                var option = { id: id, title: title, text: text, reslutText: reslutText, emotions: emotions };
+                exports.options.push(option);
+            });
+        },
+        error: function (error) {
+            console.error('option.csvの読み込みでエラーが発生しました:', error.message);
+        }
     });
     // emotion.csvの読み込み
-    fs.createReadStream('static/emotion.csv')
-        .pipe(emotionParser)
-        .on('data', function (row) {
-        var id = row[0];
-        var name = row[1];
-        var emotion = { id: id, name: name };
-        exports.emotions.push(emotion);
-    })
-        .on('end', function () {
-        // ファイル読み込みが完了した後に実行される処理
-    })
-        .on('error', function (error) {
-        // エラーハンドリング
-        console.error('emotion.csvの読み込みでエラーが発生しました:', error.message);
+    Papa.parse(csv_1.emotionCsvData, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: function (result) {
+            result.data.forEach(function (row) {
+                var id = row.id;
+                var name = row.name;
+                var emotion = { id: id, name: name };
+                exports.emotions.push(emotion);
+            });
+        },
+        error: function (error) {
+            console.error('emotion.csvの読み込みでエラーが発生しました:', error.message);
+        }
     });
 };
 exports.readCsvFiles = readCsvFiles;
