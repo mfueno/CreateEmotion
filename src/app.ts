@@ -1,6 +1,7 @@
 import Card from './Card'
 import { getRandomCardType, getRandomChipType, getRandomText } from './utils'
 import { showAlert } from './dialog'
+import { readCsvFiles } from './csvLoader'
 
 /// <reference types="bootstrap" />
 
@@ -38,6 +39,8 @@ function handleCardClick(cardId: number) {
       </div>
     `
 
+    cardElement.dataset.optionId = '2'
+
     const randomChipType = getRandomChipType()
 
     updateChips(randomChipType)
@@ -48,7 +51,7 @@ function handleCardClick(cardId: number) {
 
 function initializeCards() {
   for (let i = 1; i <= 3; i++) {
-    const card = new Card(i, handleCardClick)
+    const card = new Card(i, '1', handleCardClick)
     const cardContainer = document.getElementById('cardContainer')
 
     if (cardContainer) {
@@ -58,5 +61,6 @@ function initializeCards() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  readCsvFiles()
   initializeCards()
 })

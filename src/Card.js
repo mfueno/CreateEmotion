@@ -2,11 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("./utils");
 var Card = /** @class */ (function () {
-    function Card(cardId, clickCallback) {
+    function Card(cardId, optionId, clickCallback) {
         var _this = this;
         this.cardElement = document.createElement('div');
         this.cardElement.id = "card".concat(cardId);
         this.cardElement.classList.add('card');
+        this.cardElement.setAttribute('data-option-id', optionId);
         this.clickCallback = clickCallback;
         this.cardElement.onclick = function () { return _this.handleCardClick(cardId); };
         var initializedText1 = (0, utils_1.getRandomText)();

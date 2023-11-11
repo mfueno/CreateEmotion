@@ -4,10 +4,15 @@ export default class Card {
   private cardElement: HTMLElement
   private clickCallback: (cardId: number) => void
 
-  constructor(cardId: number, clickCallback: (cardId: number) => void) {
+  constructor(
+    cardId: number,
+    optionId: string,
+    clickCallback: (cardId: number) => void
+  ) {
     this.cardElement = document.createElement('div')
     this.cardElement.id = `card${cardId}`
     this.cardElement.classList.add('card')
+    this.cardElement.setAttribute('data-option-id', optionId)
     this.clickCallback = clickCallback
 
     this.cardElement.onclick = () => this.handleCardClick(cardId)
