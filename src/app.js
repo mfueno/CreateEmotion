@@ -21,16 +21,27 @@ function diplayChips() {
             .join('');
     }
 }
+function updateEvent(eventId) {
+    var eventElement = document.getElementById('event');
+    if (eventElement) {
+        eventElement.dataset.eventId = eventId;
+        var newTitle = (0, utils_1.getRandomText)();
+        var newText = (0, utils_1.getRandomText)();
+        eventElement.innerHTML = "\n      <div class=\"eventTitle\">\n        ".concat(newTitle, "\n      </div>\n      <div class=\"eventText\">\n        ").concat(newText, "\n      </div>\n    ");
+    }
+}
 function handleCardClick(cardId) {
     var newCardType = (0, utils_1.getRandomCardType)();
     var cardElement = document.getElementById("card".concat(cardId));
     if (cardElement) {
+        var newEventId = (0, utils_1.getRandomText)();
+        cardElement.dataset.optionId = '2';
         var newText1 = (0, utils_1.getRandomText)();
         var newText2 = (0, utils_1.getRandomText)();
         cardElement.innerHTML = "\n      <div class=\"text1\">\n        ".concat(newText1, "\n      </div>\n      <div class=\"text2\">\n        ").concat(newText2, "\n      </div>\n    ");
-        cardElement.dataset.optionId = '2';
         var randomChipType = (0, utils_1.getRandomChipType)();
         updateChips(randomChipType);
+        updateEvent(newEventId);
         (0, dialog_1.showAlert)("Card ".concat(cardId, " clicked! New card type: ").concat(newCardType));
     }
 }
@@ -46,4 +57,5 @@ function initializeCards() {
 document.addEventListener('DOMContentLoaded', function () {
     (0, csvLoader_1.readCsvFiles)();
     initializeCards();
+    updateEvent('');
 });

@@ -21,11 +21,34 @@ function diplayChips() {
   }
 }
 
+function updateEvent(eventId: string) {
+  const eventElement = document.getElementById('event')
+  if (eventElement) {
+    eventElement.dataset.eventId = eventId
+
+    const newTitle = getRandomText()
+    const newText = getRandomText()
+
+    eventElement.innerHTML = `
+      <div class="eventTitle">
+        ${newTitle}
+      </div>
+      <div class="eventText">
+        ${newText}
+      </div>
+    `
+  }
+}
+
 function handleCardClick(cardId: number) {
   const newCardType = getRandomCardType()
   const cardElement = document.getElementById(`card${cardId}`)
 
   if (cardElement) {
+    const newEventId = getRandomText()
+
+    cardElement.dataset.optionId = '2'
+
     const newText1 = getRandomText()
     const newText2 = getRandomText()
 
@@ -38,11 +61,10 @@ function handleCardClick(cardId: number) {
       </div>
     `
 
-    cardElement.dataset.optionId = '2'
-
     const randomChipType = getRandomChipType()
 
     updateChips(randomChipType)
+    updateEvent(newEventId)
 
     showAlert(`Card ${cardId} clicked! New card type: ${newCardType}`)
   }
@@ -62,4 +84,5 @@ function initializeCards() {
 document.addEventListener('DOMContentLoaded', () => {
   readCsvFiles()
   initializeCards()
+  updateEvent('')
 })

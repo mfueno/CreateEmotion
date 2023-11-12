@@ -24,6 +24,15 @@ body {
   font-size: 20px;
 }
 
+.eventTitle {
+  margin-bottom: 1px;
+  max-height: 40px;
+}
+
+.eventText {
+  margin-bottom: 5px;
+}
+
 #cardContainer {
   display: flex;
 }
