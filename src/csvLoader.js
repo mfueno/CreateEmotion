@@ -33,8 +33,6 @@ exports.emotions = [];
 var readCsvFiles = function () {
     // event.csvの読み込み
     Papa.parse(csv_1.eventCsvData, {
-        header: true,
-        dynamicTyping: true,
         skipEmptyLines: true,
         complete: function (result) {
             result.data.forEach(function (row) {
@@ -58,19 +56,17 @@ var readCsvFiles = function () {
     });
     // option.csvの読み込み
     Papa.parse(csv_1.optionCsvData, {
-        header: true,
-        dynamicTyping: true,
         skipEmptyLines: true,
         complete: function (result) {
             result.data.forEach(function (row) {
-                var id = row.id;
-                var title = row.title;
-                var text = row.text;
-                var reslutText = row.reslutText;
+                var id = row[0];
+                var title = row[1];
+                var text = row[2];
+                var reslutText = row[3];
                 var emotions = {
-                    need: row.need,
-                    get: row.get,
-                    lost: row.lost
+                    need: row[4],
+                    get: row[6],
+                    lost: row[8]
                 };
                 var option = { id: id, title: title, text: text, reslutText: reslutText, emotions: emotions };
                 exports.options.push(option);
@@ -82,13 +78,11 @@ var readCsvFiles = function () {
     });
     // emotion.csvの読み込み
     Papa.parse(csv_1.emotionCsvData, {
-        header: true,
-        dynamicTyping: true,
         skipEmptyLines: true,
         complete: function (result) {
             result.data.forEach(function (row) {
-                var id = row.id;
-                var name = row.name;
+                var id = row[0];
+                var name = row[1];
                 var emotion = { id: id, name: name };
                 exports.emotions.push(emotion);
             });

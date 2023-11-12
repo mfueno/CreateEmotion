@@ -33,8 +33,6 @@ export const emotions: Emotion[] = []
 export const readCsvFiles = () => {
   // event.csvの読み込み
   Papa.parse(eventCsvData, {
-    header: true,
-    dynamicTyping: true,
     skipEmptyLines: true,
     complete: (result) => {
       result.data.forEach((row: any) => {
@@ -61,19 +59,17 @@ export const readCsvFiles = () => {
 
   // option.csvの読み込み
   Papa.parse(optionCsvData, {
-    header: true,
-    dynamicTyping: true,
     skipEmptyLines: true,
     complete: (result) => {
       result.data.forEach((row: any) => {
-        const id = row.id
-        const title = row.title
-        const text = row.text
-        const reslutText = row.reslutText
+        const id = row[0]
+        const title = row[1]
+        const text = row[2]
+        const reslutText = row[3]
         const emotions = {
-          need: row.need,
-          get: row.get,
-          lost: row.lost
+          need: row[4],
+          get: row[6],
+          lost: row[8]
         }
 
         const option: Option = { id, title, text, reslutText, emotions }
@@ -90,13 +86,11 @@ export const readCsvFiles = () => {
 
   // emotion.csvの読み込み
   Papa.parse(emotionCsvData, {
-    header: true,
-    dynamicTyping: true,
     skipEmptyLines: true,
     complete: (result) => {
       result.data.forEach((row: any) => {
-        const id = row.id
-        const name = row.name
+        const id = row[0]
+        const name = row[1]
 
         const emotion: Emotion = { id, name }
         emotions.push(emotion)
