@@ -8,54 +8,82 @@ var utils_1 = require("./utils");
 var dialog_1 = require("./dialog");
 var csvLoader_1 = require("./csvLoader");
 /// <reference types="bootstrap" />
-var chips = [];
-function updateChips(chipType) {
-    chips.push(chipType);
-    diplayChips();
+var inLab = true;
+var senseOfValues = [];
+function addEmotion(emotion) {
+    senseOfValues.push(emotion);
 }
-function diplayChips() {
+function removeEmotion(id) {
+    var index = senseOfValues.findIndex(function (emotion) { return emotion.id === id; });
+    if (index !== -1) {
+        senseOfValues.splice(index, 1);
+    }
+}
+function updateSenseOfValues(option) {
+    var get = (0, utils_1.getEmotion)(option.emotions.get);
+    if (get) {
+        addEmotion(get);
+    }
+    var lost = option.emotions.lost;
+    if (lost !== '') {
+        removeEmotion(lost);
+    }
+    displaySenseOfValues();
+}
+function displaySenseOfValues() {
     var chipContainer = document.getElementById('chipContainer');
     if (chipContainer) {
-        chipContainer.innerHTML = chips
-            .map(function (chip) { return "<div class=\"chip\">".concat(chip, "</div>"); })
+        chipContainer.innerHTML = senseOfValues
+            .map(function (emotion) { return "<div class=\"chip\">".concat(emotion.name, "</div>"); })
             .join('');
     }
 }
-function updateEvent(eventId) {
+function updateEvent(event) {
     var eventElement = document.getElementById('event');
     if (eventElement) {
-        eventElement.dataset.eventId = eventId;
-        var newTitle = (0, utils_1.getRandomText)();
-        var newText = (0, utils_1.getRandomText)();
-        eventElement.innerHTML = "\n      <div class=\"eventTitle\">\n        ".concat(newTitle, "\n      </div>\n      <div class=\"eventText\">\n        ").concat(newText, "\n      </div>\n    ");
+        eventElement.dataset.eventId = event.id;
+        var eventTitleElement = eventElement.querySelector('.eventTitle');
+        if (eventTitleElement) {
+            eventTitleElement.textContent = event.title;
+        }
+        var eventTextElement = eventElement.querySelector('.eventText');
+        if (eventTextElement) {
+            eventTextElement.textContent = event.text;
+        }
     }
 }
-function handleCardClick(cardId) {
-    var newCardType = (0, utils_1.getRandomCardType)();
-    var cardElement = document.getElementById("card".concat(cardId));
-    if (cardElement) {
-        var newEventId = (0, utils_1.getRandomText)();
-        cardElement.dataset.optionId = '2';
-        var newText1 = (0, utils_1.getRandomText)();
-        var newText2 = (0, utils_1.getRandomText)();
-        cardElement.innerHTML = "\n      <div class=\"text1\">\n        ".concat(newText1, "\n      </div>\n      <div class=\"text2\">\n        ").concat(newText2, "\n      </div>\n    ");
-        var randomChipType = (0, utils_1.getRandomChipType)();
-        updateChips(randomChipType);
-        updateEvent(newEventId);
-        (0, dialog_1.showAlert)("Card ".concat(cardId, " clicked! New card type: ").concat(newCardType));
+function updateCards(event) {
+    var newOptions = (0, utils_1.getOptions)(event);
+    var cardContainer = document.getElementById('cardContainer');
+    if (cardContainer) {
+        cardContainer.innerHTML = '';
     }
-}
-function initializeCards() {
-    for (var i = 1; i <= 3; i++) {
-        var card = new Card_1.default(i, '1', handleCardClick);
+    newOptions.map(function (option) {
+        var card = new Card_1.default(option.id, option, handleCardClick);
         var cardContainer = document.getElementById('cardContainer');
         if (cardContainer) {
             cardContainer.appendChild(card.getCardElement());
         }
+    });
+}
+function handleCardClick(optionId) {
+    var cardElement = document.getElementById("card".concat(optionId));
+    if (cardElement) {
+        var eventType = inLab ? '1' : '2';
+        var newEvent = (0, utils_1.getRandomEvent)(eventType);
+        (0, dialog_1.showAlert)("Card ".concat(optionId, " clicked!"));
+        updateSenseOfValues(csvLoader_1.options.find(function (option) { return option.id === optionId; }));
+        updateEvent(newEvent);
+        updateCards(newEvent);
     }
+}
+function initialize() {
+    var event = (0, utils_1.getRandomEvent)('1');
+    updateEvent(event);
+    updateCards(event);
+    senseOfValues = [];
 }
 document.addEventListener('DOMContentLoaded', function () {
     (0, csvLoader_1.readCsvFiles)();
-    initializeCards();
-    updateEvent('');
+    initialize();
 });

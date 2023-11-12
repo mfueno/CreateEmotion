@@ -1,17 +1,15 @@
-const cardTypes: string[] = ['A', 'B', 'C']
+import { Event, emotions, events, options } from './csvLoader'
 
-export function getRandomCardType(): string {
-  const randomIndex = Math.floor(Math.random() * cardTypes.length)
-  return cardTypes[randomIndex]
+export function getRandomEvent(type: string) {
+  const selectedEvents = events.filter((event) => event.type === type)
+  const randomIndex = Math.floor(Math.random() * selectedEvents.length)
+  return selectedEvents[randomIndex]
 }
 
-export function getRandomChipType() {
-  const randomChip = Math.floor(Math.random() * 10) + 1
-  return randomChip
+export function getOptions(event: Event) {
+  return options.filter((option) => event.options.includes(option.id))
 }
 
-export function getRandomText() {
-  const texts = ['Apple', 'Banana', 'Cherry', 'Date', 'Fig']
-  const randomIndex = Math.floor(Math.random() * texts.length)
-  return texts[randomIndex]
+export function getEmotion(id: string) {
+  return emotions.find((emotion) => emotion.id === id)
 }

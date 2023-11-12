@@ -1,20 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRandomText = exports.getRandomChipType = exports.getRandomCardType = void 0;
-var cardTypes = ['A', 'B', 'C'];
-function getRandomCardType() {
-    var randomIndex = Math.floor(Math.random() * cardTypes.length);
-    return cardTypes[randomIndex];
+exports.getEmotion = exports.getOptions = exports.getRandomEvent = void 0;
+var csvLoader_1 = require("./csvLoader");
+function getRandomEvent(type) {
+    var selectedEvents = csvLoader_1.events.filter(function (event) { return event.type === type; });
+    var randomIndex = Math.floor(Math.random() * selectedEvents.length);
+    return selectedEvents[randomIndex];
 }
-exports.getRandomCardType = getRandomCardType;
-function getRandomChipType() {
-    var randomChip = Math.floor(Math.random() * 10) + 1;
-    return randomChip;
+exports.getRandomEvent = getRandomEvent;
+function getOptions(event) {
+    return csvLoader_1.options.filter(function (option) { return event.options.includes(option.id); });
 }
-exports.getRandomChipType = getRandomChipType;
-function getRandomText() {
-    var texts = ['Apple', 'Banana', 'Cherry', 'Date', 'Fig'];
-    var randomIndex = Math.floor(Math.random() * texts.length);
-    return texts[randomIndex];
+exports.getOptions = getOptions;
+function getEmotion(id) {
+    return csvLoader_1.emotions.find(function (emotion) { return emotion.id === id; });
 }
-exports.getRandomText = getRandomText;
+exports.getEmotion = getEmotion;

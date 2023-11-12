@@ -23,11 +23,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.readCsvFiles = exports.emotions = exports.options = exports.events2 = exports.events1 = void 0;
+exports.readCsvFiles = exports.emotions = exports.options = exports.events = void 0;
 var csv_1 = require("./static/csv");
 var Papa = __importStar(require("papaparse"));
-exports.events1 = [];
-exports.events2 = [];
+exports.events = [];
 exports.options = [];
 exports.emotions = [];
 var readCsvFiles = function () {
@@ -41,13 +40,8 @@ var readCsvFiles = function () {
                 var title = row[2];
                 var text = row[3];
                 var options = [row[4], row[6], row[8]];
-                var event = { id: id, title: title, text: text, options: options };
-                if (type === '1') {
-                    exports.events1.push(event);
-                }
-                if (type === '2') {
-                    exports.events2.push(event);
-                }
+                var event = { id: id, type: type, title: title, text: text, options: options };
+                exports.events.push(event);
             });
         },
         error: function (error) {

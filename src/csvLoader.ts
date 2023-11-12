@@ -1,14 +1,15 @@
 import { emotionCsvData, eventCsvData, optionCsvData } from './static/csv'
 import * as Papa from 'papaparse'
 
-type Event = {
+export type Event = {
   id: string
+  type: string
   title: string
   text: string
   options: string[]
 }
 
-type Option = {
+export type Option = {
   id: string
   title: string
   text: string
@@ -20,13 +21,12 @@ type Option = {
   }
 }
 
-type Emotion = {
+export type Emotion = {
   id: string
   name: string
 }
 
-export const events1: Event[] = []
-export const events2: Event[] = []
+export const events: Event[] = []
 export const options: Option[] = []
 export const emotions: Emotion[] = []
 
@@ -42,14 +42,9 @@ export const readCsvFiles = () => {
         const text = row[3]
         const options = [row[4], row[6], row[8]]
 
-        const event: Event = { id, title, text, options }
+        const event: Event = { id, type, title, text, options }
 
-        if (type === '1') {
-          events1.push(event)
-        }
-        if (type === '2') {
-          events2.push(event)
-        }
+        events.push(event)
       })
     },
     error: (error: any) => {

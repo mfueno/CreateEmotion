@@ -1,88 +1,110 @@
 import Card from './Card'
-import { getRandomCardType, getRandomChipType, getRandomText } from './utils'
+import { getRandomEvent, getOptions, getEmotion } from './utils'
 import { showAlert } from './dialog'
-import { readCsvFiles } from './csvLoader'
+import {
+  Emotion,
+  Event,
+  Option,
+  events,
+  options,
+  readCsvFiles
+} from './csvLoader'
 
 /// <reference types="bootstrap" />
 
-let chips: number[] = []
+let inLab: boolean = true
 
-function updateChips(chipType: number) {
-  chips.push(chipType)
-  diplayChips()
+let senseOfValues: Emotion[] = []
+
+function addEmotion(emotion: Emotion) {
+  senseOfValues.push(emotion)
 }
 
-function diplayChips() {
+function removeEmotion(id: string) {
+  const index = senseOfValues.findIndex((emotion) => emotion.id === id)
+  if (index !== -1) {
+    senseOfValues.splice(index, 1)
+  }
+}
+
+function updateSenseOfValues(option: Option) {
+  const get = getEmotion(option.emotions.get)
+  if (get) {
+    addEmotion(get)
+  }
+  const lost = option.emotions.lost
+  if (lost !== '') {
+    removeEmotion(lost)
+  }
+
+  displaySenseOfValues()
+}
+
+function displaySenseOfValues() {
   const chipContainer = document.getElementById('chipContainer')
   if (chipContainer) {
-    chipContainer.innerHTML = chips
-      .map((chip) => `<div class="chip">${chip}</div>`)
+    chipContainer.innerHTML = senseOfValues
+      .map((emotion) => `<div class="chip">${emotion.name}</div>`)
       .join('')
   }
 }
 
-function updateEvent(eventId: string) {
+function updateEvent(event: Event) {
   const eventElement = document.getElementById('event')
   if (eventElement) {
-    eventElement.dataset.eventId = eventId
+    eventElement.dataset.eventId = event.id
 
-    const newTitle = getRandomText()
-    const newText = getRandomText()
-
-    eventElement.innerHTML = `
-      <div class="eventTitle">
-        ${newTitle}
-      </div>
-      <div class="eventText">
-        ${newText}
-      </div>
-    `
-  }
-}
-
-function handleCardClick(cardId: number) {
-  const newCardType = getRandomCardType()
-  const cardElement = document.getElementById(`card${cardId}`)
-
-  if (cardElement) {
-    const newEventId = getRandomText()
-
-    cardElement.dataset.optionId = '2'
-
-    const newText1 = getRandomText()
-    const newText2 = getRandomText()
-
-    cardElement.innerHTML = `
-      <div class="text1">
-        ${newText1}
-      </div>
-      <div class="text2">
-        ${newText2}
-      </div>
-    `
-
-    const randomChipType = getRandomChipType()
-
-    updateChips(randomChipType)
-    updateEvent(newEventId)
-
-    showAlert(`Card ${cardId} clicked! New card type: ${newCardType}`)
-  }
-}
-
-function initializeCards() {
-  for (let i = 1; i <= 3; i++) {
-    const card = new Card(i, '1', handleCardClick)
-    const cardContainer = document.getElementById('cardContainer')
-
-    if (cardContainer) {
-      cardContainer.appendChild(card.getCardElement())
+    const eventTitleElement = eventElement.querySelector('.eventTitle')
+    if (eventTitleElement) {
+      eventTitleElement.textContent = event.title
+    }
+    const eventTextElement = eventElement.querySelector('.eventText')
+    if (eventTextElement) {
+      eventTextElement.textContent = event.text
     }
   }
 }
 
+function updateCards(event: Event) {
+  const newOptions = getOptions(event)
+
+  const cardContainer = document.getElementById('cardContainer')
+  if (cardContainer) {
+    cardContainer.innerHTML = ''
+  }
+
+  newOptions.map((option) => {
+    const card = new Card(option.id, option, handleCardClick)
+    const cardContainer = document.getElementById('cardContainer')
+    if (cardContainer) {
+      cardContainer.appendChild(card.getCardElement())
+    }
+  })
+}
+
+function handleCardClick(optionId: string) {
+  const cardElement = document.getElementById(`card${optionId}`)
+
+  if (cardElement) {
+    const eventType = inLab ? '1' : '2'
+    const newEvent = getRandomEvent(eventType)
+
+    showAlert(`Card ${optionId} clicked!`)
+
+    updateSenseOfValues(options.find((option) => option.id === optionId)!)
+    updateEvent(newEvent)
+    updateCards(newEvent)
+  }
+}
+
+function initialize() {
+  const event = getRandomEvent('1')
+  updateEvent(event)
+  updateCards(event)
+  senseOfValues = []
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   readCsvFiles()
-  initializeCards()
-  updateEvent('')
+  initialize()
 })
