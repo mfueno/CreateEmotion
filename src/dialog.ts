@@ -1,8 +1,15 @@
+import { Emotion } from './csvLoader'
+
 // ダイアログを表示する関数
-export function showAlert(message: string) {
+export function showResultDialog(message: string, emotion?: Emotion) {
   // Bootstrap Modalをトリガー
-  $('#myModal').modal('show')
+  $('#resultDialog').modal('show')
 
   // モーダル内のメッセージを設定
-  $('#modalMessage').text(message)
+  $('#resultMessage').text(message)
+
+  $('#resultEmotion').text(emotion?.name ?? '')
+  $('#resultEmotionMessage').text(
+    emotion ? 'を獲得した！' : '何も獲得できなかった'
+  )
 }

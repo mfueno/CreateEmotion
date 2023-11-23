@@ -9,14 +9,36 @@ var dialog_1 = require("./dialog");
 var csvLoader_1 = require("./csvLoader");
 /// <reference types="bootstrap" />
 var inLab = true;
+var count = 0;
 var senseOfValues = [];
+function updateHeader() {
+    var headerElement = document.getElementById('header');
+    if (headerElement) {
+        count += 1;
+        var headerText = "".concat(inLab ? '実験室' : '社会', " - (").concat(count, "/5)");
+        headerElement.textContent = headerText;
+    }
+}
 function addEmotion(emotion) {
-    senseOfValues.push(emotion);
+    var index = senseOfValues.findIndex(function (i) { return i.emotion.id === emotion.id; });
+    if (index === -1) {
+        senseOfValues.push({ emotion: emotion, count: 1 });
+    }
+    else {
+        var newCount = senseOfValues[index].count + 1;
+        senseOfValues[index] = { emotion: emotion, count: newCount };
+    }
 }
 function removeEmotion(id) {
-    var index = senseOfValues.findIndex(function (emotion) { return emotion.id === id; });
+    var index = senseOfValues.findIndex(function (i) { return i.emotion.id === id; });
     if (index !== -1) {
-        senseOfValues.splice(index, 1);
+        var currentCount = senseOfValues[index].count;
+        if (currentCount === 1) {
+            senseOfValues.splice(index, 1);
+        }
+        else {
+            senseOfValues[index].count += 1;
+        }
     }
 }
 function updateSenseOfValues(option) {
@@ -34,7 +56,9 @@ function displaySenseOfValues() {
     var chipContainer = document.getElementById('chipContainer');
     if (chipContainer) {
         chipContainer.innerHTML = senseOfValues
-            .map(function (emotion) { return "<div class=\"chip\">".concat(emotion.name, "</div>"); })
+            .map(function (i) {
+            return "<div class=\"chip".concat(i.count < 3 ? i.count : 3, "\">").concat(i.emotion.name, " ").concat(i.count > 1 ? "+".concat(i.count - 1) : '', "</div>");
+        })
             .join('');
     }
 }
@@ -69,16 +93,21 @@ function updateCards(event) {
 function handleCardClick(optionId) {
     var cardElement = document.getElementById("card".concat(optionId));
     if (cardElement) {
+        var selectedOption = csvLoader_1.options.find(function (option) { return option.id === optionId; });
+        var resultText = selectedOption.reslutText;
+        var resultEmotion = (0, utils_1.getEmotion)(selectedOption.emotions.get);
+        (0, dialog_1.showResultDialog)(resultText, resultEmotion);
         var eventType = inLab ? '1' : '2';
         var newEvent = (0, utils_1.getRandomEvent)(eventType);
-        (0, dialog_1.showAlert)("Card ".concat(optionId, " clicked!"));
         updateSenseOfValues(csvLoader_1.options.find(function (option) { return option.id === optionId; }));
+        updateHeader();
         updateEvent(newEvent);
         updateCards(newEvent);
     }
 }
 function initialize() {
     var event = (0, utils_1.getRandomEvent)('1');
+    updateHeader();
     updateEvent(event);
     updateCards(event);
     senseOfValues = [];

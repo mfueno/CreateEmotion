@@ -17,7 +17,7 @@
     <title>Click Card Game</title>
   </head>
   <body>
-    <div id="header">Click Card Game</div>
+    <div id="header"></div>
 
     <div id="event" class="event" data-event-id="">
       <div class="eventTitle"></div>
@@ -28,31 +28,27 @@
 
     <div id="chipContainer"></div>
 
-    <!-- Bootstrap Modal -->
+    <!-- Result Dialog -->
     <div
       class="modal fade"
-      id="myModal"
+      id="resultDialog"
       tabindex="-1"
       role="dialog"
-      aria-labelledby="exampleModalLabel"
+      aria-labelledby="resultDialogLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Card Clicked</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <h5 class="modal-title" id="resultDialogLabel">行動成功</h5>
           </div>
           <div class="modal-body">
             <!-- メッセージを表示する領域 -->
-            <p id="modalMessage"></p>
+            <p id="resultMessage"></p>
+            <p>
+              <span id="resultEmotion" class="bold"></span>
+              <span id="resultEmotionMessage"></span>
+            </p>
           </div>
           <div class="modal-footer">
             <button
@@ -60,7 +56,7 @@
               class="btn btn-secondary"
               data-dismiss="modal"
             >
-              Close
+              閉じる
             </button>
           </div>
         </div>
