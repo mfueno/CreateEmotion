@@ -1,4 +1,4 @@
-import { Emotion } from './csvLoader'
+import { Emotion } from './types'
 
 // ダイアログを表示する関数
 export function showResultDialog(message: string, emotion?: Emotion) {

@@ -1,24 +1,14 @@
 import Card from './Card'
 import { getRandomEvent, getOptions, getEmotion, checkCondition } from './utils'
 import { showResultDialog } from './dialog'
-import {
-  Emotion,
-  Event,
-  Option,
-  Events,
-  Options,
-  readCsvFiles
-} from './csvLoader'
+import { Options, readCsvFiles } from './csvLoader'
+import { Emotion, Event, Option, EmotionWithCount } from './types'
 
 /// <reference types="bootstrap" />
 
 let inLab: boolean = true
 let count: number = 0
 
-export type EmotionWithCount = {
-  emotion: Emotion
-  count: number
-}
 let senseOfValues: EmotionWithCount[] = []
 
 function updateHeader() {

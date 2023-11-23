@@ -1,4 +1,4 @@
-import { Option } from './csvLoader'
+import { Option } from './types'
 
 export default class Card {
   private cardElement: HTMLElement

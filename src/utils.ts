@@ -1,12 +1,5 @@
-import { EmotionWithCount } from './app'
-import {
-  Event,
-  Emotions,
-  Events,
-  Options,
-  Option,
-  Conditions
-} from './csvLoader'
+import { Emotions, Events, Options, Conditions } from './csvLoader'
+import { Event, Option, EmotionWithCount } from './types'
 
 export function getRandomEvent(type: string) {
   const selectedEvents = Events.filter((event) => event.type === type)

@@ -5,37 +5,7 @@ import {
   optionCsvData
 } from './static/csv'
 import * as Papa from 'papaparse'
-
-export type Event = {
-  id: string
-  type: string
-  title: string
-  text: string
-  options: string[]
-}
-
-export type Option = {
-  id: string
-  title: string
-  text: string
-  reslutText: string
-  conditionKey: string
-  emotions: {
-    get: string
-    lost: string
-  }
-}
-
-export type Condition = {
-  key: string
-  ok: string
-  ng: string
-}
-
-export type Emotion = {
-  id: string
-  name: string
-}
+import { Event, Option, Condition, Emotion } from './types'
 
 export const Events: Event[] = []
 export const Options: Option[] = []
