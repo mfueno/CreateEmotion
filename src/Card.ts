@@ -7,14 +7,19 @@ export default class Card {
   constructor(
     cardId: string,
     option: Option,
-    clickCallback: (cardId: string) => void
+    clickCallback: (cardId: string) => void,
+    disabled?: boolean
   ) {
     this.cardElement = document.createElement('div')
     this.cardElement.id = `card${cardId}`
     this.cardElement.classList.add('card')
+    if (disabled) {
+      this.cardElement.classList.add('disabled')
+    }
     this.clickCallback = clickCallback
 
-    this.cardElement.onclick = () => this.handleCardClick(cardId)
+    this.cardElement.onclick = () =>
+      disabled ? {} : this.handleCardClick(cardId)
 
     this.cardElement.innerHTML = `
       <div class="title">

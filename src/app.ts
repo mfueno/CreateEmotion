@@ -1,12 +1,12 @@
 import Card from './Card'
-import { getRandomEvent, getOptions, getEmotion } from './utils'
+import { getRandomEvent, getOptions, getEmotion, checkCondition } from './utils'
 import { showResultDialog } from './dialog'
 import {
   Emotion,
   Event,
   Option,
-  events,
-  options,
+  Events,
+  Options,
   readCsvFiles
 } from './csvLoader'
 
@@ -15,7 +15,7 @@ import {
 let inLab: boolean = true
 let count: number = 0
 
-type EmotionWithCount = {
+export type EmotionWithCount = {
   emotion: Emotion
   count: number
 }
@@ -105,7 +105,12 @@ function updateCards(event: Event) {
   }
 
   newOptions.map((option) => {
-    const card = new Card(option.id, option, handleCardClick)
+    const card = new Card(
+      option.id,
+      option,
+      handleCardClick,
+      checkCondition(option, senseOfValues)
+    )
     const cardContainer = document.getElementById('cardContainer')
     if (cardContainer) {
       cardContainer.appendChild(card.getCardElement())
@@ -117,7 +122,7 @@ function handleCardClick(optionId: string) {
   const cardElement = document.getElementById(`card${optionId}`)
 
   if (cardElement) {
-    const selectedOption = options.find((option) => option.id === optionId)!
+    const selectedOption = Options.find((option) => option.id === optionId)!
     const resultText = selectedOption.reslutText
     const resultEmotion = getEmotion(selectedOption.emotions.get)
 
@@ -126,7 +131,7 @@ function handleCardClick(optionId: string) {
     const eventType = inLab ? '1' : '2'
     const newEvent = getRandomEvent(eventType)
 
-    updateSenseOfValues(options.find((option) => option.id === optionId)!)
+    updateSenseOfValues(Options.find((option) => option.id === optionId)!)
     updateHeader()
     updateEvent(newEvent)
     updateCards(newEvent)

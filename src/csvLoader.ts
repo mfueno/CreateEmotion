@@ -1,4 +1,9 @@
-import { emotionCsvData, eventCsvData, optionCsvData } from './static/csv'
+import {
+  conditionCsvData,
+  emotionCsvData,
+  eventCsvData,
+  optionCsvData
+} from './static/csv'
 import * as Papa from 'papaparse'
 
 export type Event = {
@@ -14,11 +19,17 @@ export type Option = {
   title: string
   text: string
   reslutText: string
+  conditionKey: string
   emotions: {
-    need: string
     get: string
     lost: string
   }
+}
+
+export type Condition = {
+  key: string
+  ok: string
+  ng: string
 }
 
 export type Emotion = {
@@ -26,12 +37,13 @@ export type Emotion = {
   name: string
 }
 
-export const events: Event[] = []
-export const options: Option[] = []
-export const emotions: Emotion[] = []
+export const Events: Event[] = []
+export const Options: Option[] = []
+export const Conditions: Condition[] = []
+export const Emotions: Emotion[] = []
 
 export const readCsvFiles = () => {
-  // event.csvの読み込み
+  // eventCsvDataの読み込み
   Papa.parse(eventCsvData, {
     skipEmptyLines: true,
     complete: (result) => {
@@ -44,15 +56,18 @@ export const readCsvFiles = () => {
 
         const event: Event = { id, type, title, text, options }
 
-        events.push(event)
+        Events.push(event)
       })
     },
     error: (error: any) => {
-      console.error('event.csvの読み込みでエラーが発生しました:', error.message)
+      console.error(
+        'eventCsvDataの読み込みでエラーが発生しました:',
+        error.message
+      )
     }
   })
 
-  // option.csvの読み込み
+  // optionCsvDataの読み込み
   Papa.parse(optionCsvData, {
     skipEmptyLines: true,
     complete: (result) => {
@@ -61,25 +76,53 @@ export const readCsvFiles = () => {
         const title = row[1]
         const text = row[2]
         const reslutText = row[3]
+        const conditionKey = row[4]
         const emotions = {
-          need: row[4],
-          get: row[6],
-          lost: row[8]
+          get: row[5],
+          lost: row[7]
         }
 
-        const option: Option = { id, title, text, reslutText, emotions }
-        options.push(option)
+        const option: Option = {
+          id,
+          title,
+          text,
+          reslutText,
+          conditionKey,
+          emotions
+        }
+        Options.push(option)
       })
     },
     error: (error: any) => {
       console.error(
-        'option.csvの読み込みでエラーが発生しました:',
+        'optionCsvDataの読み込みでエラーが発生しました:',
         error.message
       )
     }
   })
 
-  // emotion.csvの読み込み
+  // conditionCsvDataの読み込み
+  Papa.parse(conditionCsvData, {
+    skipEmptyLines: true,
+    complete: (result) => {
+      result.data.forEach((row: any) => {
+        const key = row[0]
+        const ok = row[1]
+        const ng = row[2]
+
+        const condition: Condition = { key, ok, ng }
+        Conditions.push(condition)
+      })
+    },
+    error: (error: any) => {
+      console.error(
+        'conditionCsvDataの読み込みでエラーが発生しました:',
+        error.message
+      )
+    }
+  })
+
+  // emotionCsvDataの読み込み
   Papa.parse(emotionCsvData, {
     skipEmptyLines: true,
     complete: (result) => {
@@ -88,12 +131,12 @@ export const readCsvFiles = () => {
         const name = row[1]
 
         const emotion: Emotion = { id, name }
-        emotions.push(emotion)
+        Emotions.push(emotion)
       })
     },
     error: (error: any) => {
       console.error(
-        'emotion.csvの読み込みでエラーが発生しました:',
+        'emotionCsvDataの読み込みでエラーが発生しました:',
         error.message
       )
     }

@@ -1,15 +1,46 @@
-import { Event, emotions, events, options } from './csvLoader'
+import { EmotionWithCount } from './app'
+import {
+  Event,
+  Emotions,
+  Events,
+  Options,
+  Option,
+  Conditions
+} from './csvLoader'
 
 export function getRandomEvent(type: string) {
-  const selectedEvents = events.filter((event) => event.type === type)
+  const selectedEvents = Events.filter((event) => event.type === type)
   const randomIndex = Math.floor(Math.random() * selectedEvents.length)
   return selectedEvents[randomIndex]
 }
 
 export function getOptions(event: Event) {
-  return options.filter((option) => event.options.includes(option.id))
+  return Options.filter((option) => event.options.includes(option.id))
 }
 
 export function getEmotion(id: string) {
-  return emotions.find((emotion) => emotion.id === id)
+  return Emotions.find((emotion) => emotion.id === id)
+}
+
+export function checkCondition(
+  option: Option,
+  senseOfValues: EmotionWithCount[]
+) {
+  const conditionKey = option.conditionKey
+  const conditions = Conditions.filter(
+    (condition) => condition.key === conditionKey
+  )
+  const oks = conditions
+    .map((condition) => condition.ok)
+    .filter((ok) => ok !== '')
+  const ngs = conditions
+    .map((condition) => condition.ng)
+    .filter((ng) => ng !== '')
+
+  const emotionIds = senseOfValues.map((i) => i.emotion.id)
+
+  return (
+    oks.some((ok) => emotionIds.includes(ok)) &&
+    !ngs.some((ng) => emotionIds.includes(ng))
+  )
 }
