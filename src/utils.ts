@@ -37,3 +37,15 @@ export function checkCondition(
     !ngs.some((ng) => emotionIds.includes(ng))
   )
 }
+
+export function shuffle<T>(array: T[]) {
+  let shuffledArray: T[] = [...array]
+
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+
+    ;[shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]
+  }
+
+  return shuffledArray
+}

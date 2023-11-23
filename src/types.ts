@@ -27,6 +27,8 @@ export type Condition = {
 export type Emotion = {
   id: string
   name: string
+  edTitle: string
+  edText: string
 }
 
 export type EmotionWithCount = {

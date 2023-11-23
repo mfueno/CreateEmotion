@@ -99,8 +99,10 @@ export const readCsvFiles = () => {
       result.data.forEach((row: any) => {
         const id = row[0]
         const name = row[1]
+        const edTitle = row[2]
+        const edText = row[3]
 
-        const emotion: Emotion = { id, name }
+        const emotion: Emotion = { id, name, edTitle, edText }
         Emotions.push(emotion)
       })
     },
