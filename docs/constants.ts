@@ -19,6 +19,11 @@ export const SocialCount: number = 5
 export const GameOverCondition: number = 3
 
 /**
+ * 通常時のリザルトタイトル
+ */
+export const NomalResultTitle: string = '行動成功'
+
+/**
  * 誕生イベント
  */
 export const BirthEvent = {
@@ -78,4 +83,20 @@ export const HalfwayEvent = {
       resultText: `あなたは再び訓練に戻った。目の前の景色が切り替わる。`
     }
   ]
+}
+
+/**
+ * ゲームオーバー時の選択肢
+ */
+export const GameOverOption = {
+  title: '実験をやり直す',
+  text: '科学に失敗は付きものだ。'
+}
+
+/**
+ * ゲームオーバー時のリザルトテキスト
+ */
+export const GameOverResult = {
+  title: '初期化',
+  text: `「やれやれ、今回もダメだったか……」`
 }

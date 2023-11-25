@@ -17,9 +17,12 @@ import {
 } from './types'
 import {
   BirthEvent,
+  GameOverOption,
+  GameOverResult,
   HalfwayEvent,
   InLabAdditionalCount,
   InLabCount,
+  NomalResultTitle,
   SocialCount
 } from './constants'
 
@@ -157,66 +160,20 @@ function updateCards(cardConstructors: CardConstructor[]) {
  */
 function checkStage() {
   if (senseOfValues.some((i) => i.count > 3)) {
-    const emotionId = senseOfValues.find((i) => i.count > 3)!
-    // TODO: やる
-    console.log('感情振り切れエンディング発生')
+    const emotionId = senseOfValues.find((i) => i.count > 3)!.emotion.id
+    // ゲームオーバーイベントを発生
+    generateGameOverEvent(emotionId)
   } else if (
     inLab &&
     count >= (additional ? InLabAdditionalCount : InLabCount)
   ) {
+    // 中間地点イベントを発生
     generateHalfwayEvent()
   } else if (!inLab && count >= SocialCount) {
-    // TODO: やる
-    console.log('クリアイベント発生')
+    // TODO: クリアイベントを発生
   } else {
-    count += 1
-
-    // ヘッダの更新
-    let maxCount: number = inLab
-      ? additional
-        ? InLabAdditionalCount
-        : InLabCount
-      : SocialCount
-    let headerText: string = `${
-      inLab ? '実験室' : '社会'
-    } - (${count}/${maxCount})`
-    updateHeader(headerText)
-
-    // イベントの更新
-    const eventType = inLab ? '1' : '2'
-    const newEvent = getRandomEvent(eventType)
-    updateEvent(newEvent.title, newEvent.text)
-
-    // カードの更新
-    const cardConstructors: CardConstructor[] = getOptions(newEvent).map(
-      (option) => ({
-        cardId: option.id,
-        title: option.title,
-        text: option.text,
-        clickCallback: handleCardClick,
-        disabled: checkCondition(option.conditionKey, senseOfValues)
-      })
-    )
-    updateCards(cardConstructors)
-  }
-}
-
-/**
- * カードクリック時の処理を行う（特殊イベント以外）
- */
-function handleCardClick(optionId: string) {
-  const cardElement = document.getElementById(`card${optionId}`)
-
-  if (cardElement) {
-    const selectedOption = Options.find((option) => option.id === optionId)!
-    const resultText = selectedOption.reslutText
-    const resultEmotion = getEmotion(selectedOption.emotions.get)
-
-    showResultDialog(resultText, resultEmotion)
-
-    updateSenseOfValues(Options.find((option) => option.id === optionId)!)
-
-    checkStage()
+    // 通常のイベントを発生
+    generateNomalEvent()
   }
 }
 
@@ -247,7 +204,7 @@ function generateBirthEvent() {
         break
     }
     generateEmotions(quantity).map((emotion) => addEmotion(emotion))
-    showResultDialog(BirthEvent.resultText)
+    showResultDialog(NomalResultTitle, BirthEvent.resultText)
     displaySenseOfValues()
     checkStage()
   }
@@ -266,6 +223,7 @@ function generateBirthEvent() {
  * 中間地点のイベントを発生させる
  */
 function generateHalfwayEvent() {
+  // カウントの更新
   count = 0
 
   // ヘッダの更新
@@ -279,13 +237,17 @@ function generateHalfwayEvent() {
     switch (cardId) {
       case '1':
         inLab = false
-        showResultDialog(HalfwayEvent.options[0].resultText)
+        showResultDialog(NomalResultTitle, HalfwayEvent.options[0].resultText)
         break
       case '2':
         const emotion = getEmotion('18')! // 劣等感
         addEmotion(emotion)
         additional = true
-        showResultDialog(HalfwayEvent.options[1].resultText, emotion)
+        showResultDialog(
+          NomalResultTitle,
+          HalfwayEvent.options[1].resultText,
+          emotion
+        )
         break
       default:
         break
@@ -299,6 +261,78 @@ function generateHalfwayEvent() {
       title: option.title,
       text: option.text,
       clickCallback: handleHalfwayCardClick
+    })
+  )
+  updateCards(cardConstructors)
+}
+
+/**
+ * ゲームオーバーイベントを発生させる
+ */
+function generateGameOverEvent(emotionId: string) {
+  // ヘッダの更新
+  updateHeader('実験レポート')
+
+  // イベントの更新
+  const emotion = getEmotion(emotionId)!
+  updateEvent(emotion.edTitle, emotion.edText)
+
+  // カードの更新
+  function handleGameOverCardClick(cardId: string) {
+    showResultDialog(GameOverResult.title, GameOverResult.text)
+    initialize()
+  }
+  const cardConstructors: CardConstructor[] = [
+    {
+      cardId: '1',
+      title: GameOverOption.title,
+      text: GameOverOption.text,
+      clickCallback: handleGameOverCardClick
+    }
+  ]
+  updateCards(cardConstructors)
+}
+
+/**
+ * 通常のイベントを発生させる
+ */
+function generateNomalEvent() {
+  // カウントの更新
+  count += 1
+
+  // ヘッダの更新
+  let maxCount: number = inLab
+    ? additional
+      ? InLabAdditionalCount
+      : InLabCount
+    : SocialCount
+  let headerText: string = `${
+    inLab ? '実験室' : '社会'
+  } - (${count}/${maxCount})`
+  updateHeader(headerText)
+
+  // イベントの更新
+  const eventType = inLab ? '1' : '2'
+  const newEvent = getRandomEvent(eventType)
+  updateEvent(newEvent.title, newEvent.text)
+
+  // カードの更新
+  function handleCardClick(optionId: string) {
+    const selectedOption = Options.find((option) => option.id === optionId)!
+    const resultText = selectedOption.reslutText
+    const resultEmotion = getEmotion(selectedOption.emotions.get)
+    showResultDialog(NomalResultTitle, resultText, resultEmotion)
+    updateSenseOfValues(Options.find((option) => option.id === optionId)!)
+    checkStage()
+  }
+
+  const cardConstructors: CardConstructor[] = getOptions(newEvent).map(
+    (option) => ({
+      cardId: option.id,
+      title: option.title,
+      text: option.text,
+      clickCallback: handleCardClick,
+      disabled: checkCondition(option.conditionKey, senseOfValues)
     })
   )
   updateCards(cardConstructors)
