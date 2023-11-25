@@ -6,7 +6,8 @@ export default class Card {
 
   constructor(
     cardId: string,
-    option: Option,
+    title: string,
+    text: string,
     clickCallback: (cardId: string) => void,
     disabled?: boolean
   ) {
@@ -22,11 +23,11 @@ export default class Card {
       disabled ? {} : this.handleCardClick(cardId)
 
     this.cardElement.innerHTML = `
-      <div class="title">
-        ${option.title}
+      <div class="cardTitle">
+        ${title}
       </div>
-      <div class="text">
-        ${option.text}
+      <div class="cardText">
+        ${text}
       </div>
     `
   }

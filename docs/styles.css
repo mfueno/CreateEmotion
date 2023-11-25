@@ -18,26 +18,27 @@ body {
   background-color: seashell;
   border: 1px solid black;
   display: flex;
-  text-align: center;
   flex-direction: column;
   padding: 10px;
   font-size: 20px;
 }
 
 .eventTitle {
+  text-align: center;
   font-weight: bold;
   font-size: 24px;
 }
 
 .eventText {
   text-overflow: ellipsis;
+  white-space: pre-wrap;
+  padding: 0 10px;
 }
 
 #cardContainer {
   white-space: nowrap;
   overflow-x: auto;
   display: flex;
-  justify-content: center;
 }
 
 .card {
@@ -47,10 +48,7 @@ body {
   background-color: lightblue;
   display: flex;
   cursor: pointer;
-  text-align: center;
   flex-direction: column;
-  justify-content: center;
-  line-height: 150px;
   font-size: 20px;
 }
 
@@ -59,9 +57,16 @@ body {
   cursor: auto;
 }
 
-.text1,
-.text2 {
-  margin-bottom: 5px;
+.cardTitle {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.cardText {
+  text-overflow: ellipsis;
+  white-space: pre-wrap;
+  padding: 0 10px;
 }
 
 .bold {

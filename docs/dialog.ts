@@ -9,7 +9,5 @@ export function showResultDialog(message: string, emotion?: Emotion) {
   $('#resultMessage').text(message)
 
   $('#resultEmotion').text(emotion?.name ?? '')
-  $('#resultEmotionMessage').text(
-    emotion ? 'を獲得した！' : '何も獲得できなかった'
-  )
+  $('#resultEmotionMessage').text(emotion ? 'を獲得した！' : '')
 }
