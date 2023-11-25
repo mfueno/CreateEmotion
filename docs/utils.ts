@@ -28,10 +28,9 @@ export function getEmotion(id: string) {
  * 所持している感情をもとに指定した選択肢が選択可能かを判定する
  */
 export function checkCondition(
-  option: Option,
+  conditionKey: string,
   senseOfValues: EmotionWithCount[]
 ) {
-  const conditionKey = option.conditionKey
   const conditions = Conditions.filter(
     (condition) => condition.key === conditionKey
   )

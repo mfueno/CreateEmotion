@@ -1,33 +1,29 @@
-import { Option } from './types'
+import { CardConstructor } from './types'
 
 export default class Card {
   private cardElement: HTMLElement
   private clickCallback: (cardId: string) => void
 
-  constructor(
-    cardId: string,
-    title: string,
-    text: string,
-    clickCallback: (cardId: string) => void,
-    disabled?: boolean
-  ) {
+  constructor(cardConstructor: CardConstructor) {
     this.cardElement = document.createElement('div')
-    this.cardElement.id = `card${cardId}`
+    this.cardElement.id = `card${cardConstructor.cardId}`
     this.cardElement.classList.add('card')
-    if (disabled) {
+    if (cardConstructor.disabled) {
       this.cardElement.classList.add('disabled')
     }
-    this.clickCallback = clickCallback
+    this.clickCallback = cardConstructor.clickCallback
 
     this.cardElement.onclick = () =>
-      disabled ? {} : this.handleCardClick(cardId)
+      cardConstructor.disabled
+        ? {}
+        : this.handleCardClick(cardConstructor.cardId)
 
     this.cardElement.innerHTML = `
       <div class="cardTitle">
-        ${title}
+        ${cardConstructor.title}
       </div>
       <div class="cardText">
-        ${text}
+        ${cardConstructor.text}
       </div>
     `
   }

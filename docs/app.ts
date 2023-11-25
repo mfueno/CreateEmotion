@@ -8,7 +8,13 @@ import {
 } from './utils'
 import { showResultDialog } from './dialog'
 import { Options, readCsvFiles } from './csvLoader'
-import { Emotion, Event, Option, EmotionWithCount } from './types'
+import {
+  Emotion,
+  Event,
+  Option,
+  EmotionWithCount,
+  CardConstructor
+} from './types'
 import {
   BirthEvent,
   HalfwayEvent,
@@ -40,21 +46,12 @@ let count: number = 0
 let senseOfValues: EmotionWithCount[] = []
 
 /**
- * ヘッダテキストを書き換える（特殊イベント以外）
+ * ヘッダテキストを書き換える
  */
-function updateHeader() {
+function updateHeader(text: string) {
   const headerElement = document.getElementById('header')
   if (headerElement) {
-    count += 1
-    let totalCount: number = inLab
-      ? additional
-        ? InLabAdditionalCount
-        : InLabCount
-      : SocialCount
-    let headerText: string = `${
-      inLab ? '実験室' : '社会'
-    } - (${count}/${totalCount})`
-    headerElement.textContent = headerText
+    headerElement.textContent = text
   }
 }
 
@@ -121,18 +118,18 @@ function updateSenseOfValues(option: Option) {
 }
 
 /**
- * イベントを更新する（特殊イベント以外）
+ * イベントを更新する
  */
-function updateEvent(event: Event) {
+function updateEvent(title: string, text: string) {
   const eventElement = document.getElementById('event')
   if (eventElement) {
     const eventTitleElement = eventElement.querySelector('.eventTitle')
     if (eventTitleElement) {
-      eventTitleElement.textContent = event.title
+      eventTitleElement.textContent = title
     }
     const eventTextElement = eventElement.querySelector('.eventText')
     if (eventTextElement) {
-      eventTextElement.textContent = event.text
+      eventTextElement.textContent = text
     }
   }
 }
@@ -140,22 +137,14 @@ function updateEvent(event: Event) {
 /**
  * イベントに従って選択肢カードを生成する
  */
-function updateCards(event: Event) {
-  const newOptions = getOptions(event)
-
+function updateCards(cardConstructors: CardConstructor[]) {
   const cardContainer = document.getElementById('cardContainer')
   if (cardContainer) {
     cardContainer.innerHTML = ''
   }
 
-  newOptions.map((option) => {
-    const card = new Card(
-      option.id,
-      option.title,
-      option.text,
-      handleCardClick,
-      checkCondition(option, senseOfValues)
-    )
+  cardConstructors.map((cardConstructor) => {
+    const card = new Card(cardConstructor)
     const cardContainer = document.getElementById('cardContainer')
     if (cardContainer) {
       cardContainer.appendChild(card.getCardElement())
@@ -180,12 +169,35 @@ function checkStage() {
     // TODO: やる
     console.log('クリアイベント発生')
   } else {
+    count += 1
+
+    // ヘッダの更新
+    let maxCount: number = inLab
+      ? additional
+        ? InLabAdditionalCount
+        : InLabCount
+      : SocialCount
+    let headerText: string = `${
+      inLab ? '実験室' : '社会'
+    } - (${count}/${maxCount})`
+    updateHeader(headerText)
+
+    // イベントの更新
     const eventType = inLab ? '1' : '2'
     const newEvent = getRandomEvent(eventType)
+    updateEvent(newEvent.title, newEvent.text)
 
-    updateHeader()
-    updateEvent(newEvent)
-    updateCards(newEvent)
+    // カードの更新
+    const cardConstructors: CardConstructor[] = getOptions(newEvent).map(
+      (option) => ({
+        cardId: option.id,
+        title: option.title,
+        text: option.text,
+        clickCallback: handleCardClick,
+        disabled: checkCondition(option.conditionKey, senseOfValues)
+      })
+    )
+    updateCards(cardConstructors)
   }
 }
 
@@ -213,29 +225,12 @@ function handleCardClick(optionId: string) {
  */
 function generateBirthEvent() {
   // ヘッダの更新
-  const headerElement = document.getElementById('header')
-  if (headerElement) {
-    headerElement.textContent = '実験室'
-  }
+  updateHeader('実験室')
 
   // イベントの更新
-  const eventElement = document.getElementById('event')
-  if (eventElement) {
-    const eventTitleElement = eventElement.querySelector('.eventTitle')
-    if (eventTitleElement) {
-      eventTitleElement.textContent = BirthEvent.title
-    }
-    const eventTextElement = eventElement.querySelector('.eventText')
-    if (eventTextElement) {
-      eventTextElement.textContent = BirthEvent.text
-    }
-  }
+  updateEvent(BirthEvent.title, BirthEvent.text)
 
   // カードの更新
-  const cardContainer = document.getElementById('cardContainer')
-  if (cardContainer) {
-    cardContainer.innerHTML = ''
-  }
   function handleBirthCardClick(cardId: string) {
     let quantity: number = 0
     switch (cardId) {
@@ -256,18 +251,15 @@ function generateBirthEvent() {
     displaySenseOfValues()
     checkStage()
   }
-  BirthEvent.options.map((option) => {
-    const card = new Card(
-      option.id,
-      option.title,
-      option.text,
-      handleBirthCardClick
-    )
-    const cardContainer = document.getElementById('cardContainer')
-    if (cardContainer) {
-      cardContainer.appendChild(card.getCardElement())
-    }
-  })
+  const cardConstructors: CardConstructor[] = BirthEvent.options.map(
+    (option) => ({
+      cardId: option.id,
+      title: option.title,
+      text: option.text,
+      clickCallback: handleBirthCardClick
+    })
+  )
+  updateCards(cardConstructors)
 }
 
 /**
@@ -277,29 +269,12 @@ function generateHalfwayEvent() {
   count = 0
 
   // ヘッダの更新
-  const headerElement = document.getElementById('header')
-  if (headerElement) {
-    headerElement.textContent = '実験室'
-  }
+  updateHeader('実験室 - 選択')
 
   // イベントの更新
-  const eventElement = document.getElementById('event')
-  if (eventElement) {
-    const eventTitleElement = eventElement.querySelector('.eventTitle')
-    if (eventTitleElement) {
-      eventTitleElement.textContent = HalfwayEvent.title
-    }
-    const eventTextElement = eventElement.querySelector('.eventText')
-    if (eventTextElement) {
-      eventTextElement.textContent = HalfwayEvent.text
-    }
-  }
+  updateEvent(HalfwayEvent.title, HalfwayEvent.text)
 
   // カードの更新
-  const cardContainer = document.getElementById('cardContainer')
-  if (cardContainer) {
-    cardContainer.innerHTML = ''
-  }
   function handleHalfwayCardClick(cardId: string) {
     switch (cardId) {
       case '1':
@@ -318,18 +293,15 @@ function generateHalfwayEvent() {
     displaySenseOfValues()
     checkStage()
   }
-  HalfwayEvent.options.map((option) => {
-    const card = new Card(
-      option.id,
-      option.title,
-      option.text,
-      handleHalfwayCardClick
-    )
-    const cardContainer = document.getElementById('cardContainer')
-    if (cardContainer) {
-      cardContainer.appendChild(card.getCardElement())
-    }
-  })
+  const cardConstructors: CardConstructor[] = HalfwayEvent.options.map(
+    (option) => ({
+      cardId: option.id,
+      title: option.title,
+      text: option.text,
+      clickCallback: handleHalfwayCardClick
+    })
+  )
+  updateCards(cardConstructors)
 }
 
 /**
@@ -342,6 +314,7 @@ function initialize() {
   additional = false
   senseOfValues = []
 
+  // 開始時のイベントを発生
   generateBirthEvent()
 }
 
