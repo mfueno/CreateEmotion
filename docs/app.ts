@@ -375,6 +375,7 @@ function initialize() {
   inLab = true
   additional = false
   senseOfValues = []
+  displaySenseOfValues()
 
   // 開始時のイベントを発生
   generateBirthEvent()
