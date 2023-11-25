@@ -17,6 +17,7 @@ import {
 } from './types'
 import {
   BirthEvent,
+  ClearEvent,
   GameOverOption,
   GameOverResult,
   HalfwayEvent,
@@ -170,7 +171,8 @@ function checkStage() {
     // 中間地点イベントを発生
     generateHalfwayEvent()
   } else if (!inLab && count >= SocialCount) {
-    // TODO: クリアイベントを発生
+    // クリアイベントを発生
+    generateClearEvent()
   } else {
     // 通常のイベントを発生
     generateNomalEvent()
@@ -263,6 +265,32 @@ function generateHalfwayEvent() {
       clickCallback: handleHalfwayCardClick
     })
   )
+  updateCards(cardConstructors)
+}
+
+/**
+ * クリアイベントを発生させる
+ */
+function generateClearEvent() {
+  // ヘッダの更新
+  updateHeader('実験レポート')
+
+  // イベントの更新
+  updateEvent(ClearEvent.title, ClearEvent.text)
+
+  // カードの更新
+  function handleClearCardClick() {
+    showResultDialog(ClearEvent.result.title, ClearEvent.result.text)
+    initialize()
+  }
+  const cardConstructors: CardConstructor[] = [
+    {
+      cardId: '1',
+      title: ClearEvent.option.title,
+      text: ClearEvent.option.text,
+      clickCallback: handleClearCardClick
+    }
+  ]
   updateCards(cardConstructors)
 }
 
