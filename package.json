@@ -14,7 +14,7 @@
   "scripts": {
     "start": "yarn run build:live",
     "build": "tsc -p . & webpack",
-    "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/app.ts"
+    "build:live": "nodemon --watch 'docs/**/*.ts' --exec \"ts-node\" docs/app.ts"
   },
   "dependencies": {
     "papaparse": "^5.4.1"
