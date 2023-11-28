@@ -1,5 +1,5 @@
 import { Emotions, Events, Options, Conditions } from './csvLoader'
-import { Event, Option, EmotionWithCount } from './types'
+import { Event, EmotionWithCount } from './types'
 
 /**
  * 指定したイベントタイプのイベントをランダムに返す
@@ -25,15 +25,10 @@ export function getEmotion(id: string) {
 }
 
 /**
- * 所持している感情をもとに指定した選択肢が選択可能かを判定する
+ * 条件keyからokとngの感情IDを返す
  */
-export function checkCondition(
-  conditionKey: string,
-  senseOfValues: EmotionWithCount[]
-) {
-  const conditions = Conditions.filter(
-    (condition) => condition.key === conditionKey
-  )
+function getCondition(key: string) {
+  const conditions = Conditions.filter((condition) => condition.key === key)
   const oks = conditions
     .map((condition) => condition.ok)
     .filter((ok) => ok !== '')
@@ -41,11 +36,36 @@ export function checkCondition(
     .map((condition) => condition.ng)
     .filter((ng) => ng !== '')
 
+  return { ok: oks, ng: ngs }
+}
+
+/**
+ * 条件keyからokとngの感情名を返す
+ */
+export function getConditionName(key: string) {
+  const condition = getCondition(key)
+  const okNames = condition.ok
+    .map((id) => getEmotion(id)?.name)
+    .filter((i): i is string => i !== undefined)
+  const ngNames = condition.ng
+    .map((id) => getEmotion(id)?.name)
+    .filter((i): i is string => i !== undefined)
+
+  return { ok: okNames, ng: ngNames }
+}
+
+/**
+ * 所持している感情をもとに指定した選択肢が選択可能かを判定する
+ */
+export function checkCondition(
+  conditionKey: string,
+  senseOfValues: EmotionWithCount[]
+) {
   const emotionIds = senseOfValues.map((i) => i.emotion.id)
 
   return (
-    oks.some((ok) => emotionIds.includes(ok)) &&
-    !ngs.some((ng) => emotionIds.includes(ng))
+    getCondition(conditionKey).ok.some((ok) => emotionIds.includes(ok)) &&
+    !getCondition(conditionKey).ng.some((ng) => emotionIds.includes(ng))
   )
 }
 

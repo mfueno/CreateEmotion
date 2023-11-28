@@ -40,6 +40,7 @@ export type CardConstructor = {
   cardId: string
   title: string
   text: string
+  condition: { ok: string[]; ng: string[] }
   clickCallback: (cardId: string) => void
   disabled?: boolean
 }

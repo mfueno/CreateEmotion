@@ -4,17 +4,12 @@ import {
   getOptions,
   getEmotion,
   checkCondition,
-  generateEmotions
+  generateEmotions,
+  getConditionName
 } from './utils'
 import { showResultDialog } from './dialog'
 import { Options, readCsvFiles } from './csvLoader'
-import {
-  Emotion,
-  Event,
-  Option,
-  EmotionWithCount,
-  CardConstructor
-} from './types'
+import { Emotion, Option, EmotionWithCount, CardConstructor } from './types'
 import {
   BirthEvent,
   ClearEvent,
@@ -215,6 +210,7 @@ function generateBirthEvent() {
       cardId: option.id,
       title: option.title,
       text: option.text,
+      condition: { ok: [], ng: [] },
       clickCallback: handleBirthCardClick
     })
   )
@@ -262,6 +258,7 @@ function generateHalfwayEvent() {
       cardId: option.id,
       title: option.title,
       text: option.text,
+      condition: { ok: [], ng: [] },
       clickCallback: handleHalfwayCardClick
     })
   )
@@ -288,6 +285,7 @@ function generateClearEvent() {
       cardId: '1',
       title: ClearEvent.option.title,
       text: ClearEvent.option.text,
+      condition: { ok: [], ng: [] },
       clickCallback: handleClearCardClick
     }
   ]
@@ -315,6 +313,7 @@ function generateGameOverEvent(emotionId: string) {
       cardId: '1',
       title: GameOverOption.title,
       text: GameOverOption.text,
+      condition: { ok: [], ng: [] },
       clickCallback: handleGameOverCardClick
     }
   ]
@@ -359,6 +358,7 @@ function generateNomalEvent() {
       cardId: option.id,
       title: option.title,
       text: option.text,
+      condition: getConditionName(option.conditionKey),
       clickCallback: handleCardClick,
       disabled: checkCondition(option.conditionKey, senseOfValues)
     })
