@@ -24,12 +24,22 @@ Node.js がインストールされていることが必要です。
 
 ### js ファイルの自動生成
 
-`tsc -w`
+```
+tsc -w
+```
 
 ### bundle.js の自動生成
 
-`npx webpack -w`
+```
+npx webpack -w
+```
 
 ### localhost 実行（http-server を用いる場合）
 
-`./docs`へ移動して、`http-server --cors`（デフォルトでは http://localhost:8080 で起動します）
+`./docs`へ移動して、
+
+```
+http-server --cors
+```
+
+（デフォルトでは http://localhost:8080 で起動します）
