@@ -32,4 +32,4 @@ Node.js がインストールされていることが必要です。
 
 ### localhost 実行（http-server を用いる場合）
 
-`./docs`で`http-server --cors`（デフォルトでは http://localhost:8080 で起動します）
+`./docs`へ移動して、`http-server --cors`（デフォルトでは http://localhost:8080 で起動します）
