@@ -1,6 +1,8 @@
 import { Emotion } from './types'
 
-// ダイアログを表示する関数
+/**
+ * ダイアログを表示する関数
+ */
 export function showResultDialog(
   title: string,
   message: string,

@@ -140,15 +140,12 @@ function updateCards(cardConstructors: CardConstructor[]) {
   const cardContainer = document.getElementById('cardContainer')
   if (cardContainer) {
     cardContainer.innerHTML = ''
-  }
 
-  cardConstructors.map((cardConstructor) => {
-    const card = new Card(cardConstructor)
-    const cardContainer = document.getElementById('cardContainer')
-    if (cardContainer) {
+    cardConstructors.map((cardConstructor) => {
+      const card = new Card(cardConstructor)
       cardContainer.appendChild(card.getCardElement())
-    }
-  })
+    })
+  }
 }
 
 /**
