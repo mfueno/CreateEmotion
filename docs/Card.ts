@@ -16,6 +16,9 @@ export default class Card {
     // 条件要素の作成
     const conditionElement = document.createElement('div')
     conditionElement.classList.add('conditionContainer')
+    if (!cardConstructor.disabled) {
+      conditionElement.classList.add('conditionBgColor')
+    }
 
     const okConditionElement = document.createElement('div')
     okConditionElement.classList.add('condition')
@@ -24,6 +27,9 @@ export default class Card {
     if (cardConstructor.condition.ok.length > 0) {
       conditionElement.appendChild(okConditionElement)
     }
+    if (!cardConstructor.disabled) {
+      okConditionElement.classList.add('okConditionTextColor')
+    }
 
     const ngConditionElement = document.createElement('div')
     ngConditionElement.classList.add('condition')
@@ -31,6 +37,9 @@ export default class Card {
     ngConditionElement.textContent = ngText
     if (cardConstructor.condition.ng.length > 0) {
       conditionElement.appendChild(ngConditionElement)
+    }
+    if (!cardConstructor.disabled) {
+      ngConditionElement.classList.add('ngConditionTextColor')
     }
 
     // タイトル要素の作成

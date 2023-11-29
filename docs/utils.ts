@@ -55,7 +55,7 @@ export function getConditionName(key: string) {
 }
 
 /**
- * 所持している感情をもとに指定した選択肢が選択可能かを判定する
+ * 所持している感情をもとに指定した選択肢が選択不可能かを判定する
  */
 export function checkCondition(
   conditionKey: string,
@@ -64,8 +64,9 @@ export function checkCondition(
   const emotionIds = senseOfValues.map((i) => i.emotion.id)
 
   return (
-    getCondition(conditionKey).ok.some((ok) => emotionIds.includes(ok)) &&
-    !getCondition(conditionKey).ng.some((ng) => emotionIds.includes(ng))
+    (getCondition(conditionKey).ok.length > 0 &&
+      !getCondition(conditionKey).ok.some((ok) => emotionIds.includes(ok))) ||
+    getCondition(conditionKey).ng.some((ng) => emotionIds.includes(ng))
   )
 }
 

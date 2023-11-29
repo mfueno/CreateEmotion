@@ -57,6 +57,27 @@ body {
   cursor: auto;
 }
 
+.conditionContainer {
+  margin: 10px;
+}
+
+.conditionBgColor {
+  background-color: palegoldenrod;
+}
+
+.condition {
+  font-size: 16px;
+  padding: 10px;
+}
+
+.okConditionTextColor {
+  color: red;
+}
+
+.ngConditionTextColor {
+  color: blue;
+}
+
 .cardTitle {
   text-align: center;
   font-weight: bold;
