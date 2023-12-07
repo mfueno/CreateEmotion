@@ -149,3 +149,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+#resultMessage {
+  white-space: pre-line;
+}
