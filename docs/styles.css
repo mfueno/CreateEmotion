@@ -31,7 +31,7 @@ body {
 
 .eventText {
   text-overflow: ellipsis;
-  white-space: pre-wrap;
+  white-space: pre-line;
   padding: 0 8px;
 }
 
@@ -99,7 +99,7 @@ body {
 
 .cardText {
   text-overflow: ellipsis;
-  white-space: pre-wrap;
+  white-space: pre-line;
   padding: 0 8px;
 }
 
